@@ -1,0 +1,47 @@
+# Python & virtual environments
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables, credentials & secrets
+.env
+.env.*
+*.env
+service-account*.json
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa
+id_ed25519
+
+# Audio files & recordings
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.flac
+
+# AI models & weights
+*.onnx
+*.onnx.json
+*.gguf
+*.bin
+*.pt
+*.pth
+*.safetensors
+models/
+
+# External submodule & local builds
+llama.cpp/
+
+# Logs and temporary files
+*.log
+err.txt
+out.txt
+*.tmp
