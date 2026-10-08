@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOUCHCALL // Zero Cloud · Pure Silicon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="theme-carbon">
+  <!-- Subtle CAD Grid Overlay -->
+  <div class="cad-grid-layer" aria-hidden="true"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-layout">
+    
+    <!-- TOP NAVIGATION BAR -->
+    <header class="app-header">
+      <div class="header-left">
+        <!-- TouchCall Brand Glyph from Brand Kit -->
+        <div class="brand-emblem" id="brandLogoBtn" title="Return to Landing Page">
+          <svg class="touchcall-svg-logo" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left Equalizer / Acoustic Waveform Bars (Neural Amber) -->
+            <rect x="6" y="32" width="6" height="16" rx="3" fill="#FF5C00" />
+            <rect x="18" y="22" width="6" height="36" rx="3" fill="#FF5C00" />
+            <rect x="30" y="28" width="6" height="24" rx="3" fill="#FF5C00" />
+            
+            <!-- Central Monolithic "T" Glyph -->
+            <!-- Top Bar Left (Optical White) -->
+            <path d="M42 12 H62 V22 H42 Z" fill="#F0F3F6" />
+            <!-- Top Bar Right with 45° Chamfer Cut (Neural Amber) -->
+            <path d="M62 12 H82 L72 22 H62 Z" fill="#FF5C00" />
+            <!-- Vertical Column with Circuit Node (Optical White) -->
+            <path d="M57 22 H67 V36 H57 Z" fill="#F0F3F6" />
+            <circle cx="62" cy="45" r="5" fill="#0B0C0E" stroke="#F0F3F6" stroke-width="3" />
+            <path d="M57 54 H67 V68 H57 Z" fill="#F0F3F6" />
+
+            <!-- Right Equalizer / Acoustic Waveform Bars (Neural Amber) -->
+            <rect x="76" y="28" width="6" height="24" rx="3" fill="#FF5C00" />
+            <rect x="88" y="22" width="6" height="36" rx="3" fill="#FF5C00" />
+            <rect x="100" y="32" width="6" height="16" rx="3" fill="#FF5C00" />
+          </svg>
+          <div class="brand-text-block">
+            <span class="brand-name">TOUCHCALL</span>
+            <span class="brand-sub">SOVEREIGN SILICON // v1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- Live System Telemetry Badges (from Brand Kit) -->
+        <div class="telemetry-pill">
+          <span class="status-dot pulsing"></span>
+          <span class="pill-label">AIR-GAPPED SECURE</span>
+          <span class="pill-divider">/</span>
+          <span class="pill-val" id="modelPill">QWEN 2.5 · 3B LOCAL</span>
+          <span class="pill-divider">/</span>
+          <span class="pill-metric" id="ttftPill">18ms TTFT</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- View Mode Switcher -->
+        <div class="mode-segmented-ctrl">
+          <button class="seg-btn active" id="tabLandingBtn" title="Landing Page Experience">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 12 8"/><line x1="16" y1="12" x2="8" y2="12"/></svg>
+            <span>Overview</span>
+          </button>
+          <button class="seg-btn" id="tabChatBtn" title="Interactive LLM Terminal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Terminal</span>
+          </button>
+          <button class="seg-btn" id="tabVoiceBtn" title="Tactile Voice Call Transceiver">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span>Voice Call</span>
+          </button>
+        </div>
+
+        <!-- Brand Identity Deck Button -->
+        <button class="icon-text-btn brand-btn" id="openBrandModalBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Brand Kit</span>
+        </button>
+
+        <!-- Sidebar / Settings Toggle -->
+        <button class="icon-btn" id="toggleSidebarBtn" title="Inference Controls & Telemetry">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE BODY -->
+    <div class="workspace-container">
+      
+      <!-- MAIN INTERACTIVE CONTENT AREA -->
+      <main class="main-content">
+        
+        <!-- ================= 0. ANIMATED LANDING PAGE VIEW ================= -->
+        <section class="view-panel active" id="landingView">
+          <div class="landing-scroll-viewport">
+            
+            <!-- HERO SECTION -->
+            <section class="landing-hero-section">
+              <!-- Animated Ambient Canvas -->
+              <canvas id="ambientHeroCanvas" class="hero-ambient-canvas"></canvas>
+
+              <!-- CAD Alignment Marks from Launch Board -->
+              <div class="cad-coord cad-top-left">(208, -3.33)</div>
+              <div class="cad-coord cad-top-right">(909, -1.379)</div>
+              <div class="cad-coord cad-bottom-left">(048, -23.881)</div>
+              <div class="cad-coord cad-bottom-right">(640, -23.990)</div>
+
+              <div class="landing-hero-content">
+                <div class="hero-badge-pill">
+                  <span class="pulsing-amber-ring"></span>
+                  <span>SOVEREIGN LOCAL VOICE AI INTERFACE</span>
+                  <span class="badge-separator">·</span>
+                  <span class="badge-glow">100% AIR-GAPPED</span>
+                </div>
+
+                <h1 class="landing-hero-headline">
+                  <span class="headline-row reveal-animate">ZERO CLOUD.</span>
+                  <span class="headline-row reveal-animate delay-1 accent-text">PURE SILICON.</span>
+                </h1>
+
+                <p class="landing-hero-description reveal-animate delay-2">
+                  High-velocity artificial intelligence executing directly on personal hardware. 
+                  Offline Qwen 2.5 3B neural reasoning, Faster-Whisper acoustic decoding, and Piper neural voice synthesis. 
+                  Zero cloud telemetry. Zero rental costs. Sovereign intelligence on bare metal.
+                </p>
+
+                <!-- Floating Tactile Prompt Dock (Exact from Launch Board Panel 1) -->
+                <div class="tactile-launch-dock reveal-animate delay-3">
+                  <div class="dock-search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  </div>
+                  
+                  <div class="dock-waveform-container" title="Interactive Acoustic Equalizer">
+                    <canvas id="heroDockWaveCanvas" width="280" height="32"></canvas>
+                  </div>
+
+                  <input 
+                    type="text" 
+                    id="heroDirectPromptInput" 
+                    class="dock-input" 
+                    placeholder="Enter command or select quick prompt below..." 
+                    value="Suggest 3 screen-free outdoor habits for today"
+                  />
+
+                  <button class="dock-launch-btn" id="heroLaunchBtn">
+                    <span>LAUNCH RUNTIME</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  </button>
+                </div>
+
+                <!-- Secondary Quick CTAs -->
+                <div class="hero-actions-row reveal-animate delay-4">
+                  <button class="hero-cta-outline" id="heroOpenVoiceBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    <span>Open Voice Transceiver</span>
+                  </button>
+                  <button class="hero-cta-ghost" id="heroOpenBrandBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>View Brand Deck</span>
+                  </button>
+                </div>
+
+                <!-- Real-Time Telemetry Ticker (Direct API Ping) -->
+                <div class="hero-telemetry-hud reveal-animate delay-4">
+                  <div class="hud-item">
+                    <span class="hud-lbl">TOKEN VELOCITY</span>
+                    <span class="hud-val highlight">48.2 tok/s</span>
+                  </div>
+                  <div class="hud-sep"></div>
+                  <div class="hud-item">
+                    <span class="hud-lbl">MEMORY FOOTPRINT</span>
+                    <span class="hud-val" id="hudRam">4.2 GB / 16 GB</span>
+                  </div>
+                  <div class="hud-sep"></div>
+                  <div class="hud-item">
+                    <span class="hud-lbl">PIPELINE LATENCY</span>
+                    <span class="hud-val highlight">18ms TTFT</span>
+                  </div>
+                  <div class="hud-sep"></div>
+                  <div class="hud-item">
+                    <span class="hud-lbl">NETWORK STATUS</span>
+                    <span class="hud-val text-green">AIR-GAPPED OFFLINE</span>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- INTERACTIVE PIPELINE & BENTO MATRIX (Panel 2 from Launch Board) -->
+            <section class="landing-bento-section">
+              <div class="section-container">
+                <div class="section-header-block">
+                  <span class="section-tag">THE SOVEREIGN TRIAD</span>
+                  <h2 class="section-title">Zero Cloud Round-Trips. 100% Personal Metal.</h2>
+                  <p class="section-sub">A synchronized three-stage neural architecture executing locally with sub-second feedback.</p>
+                </div>
+
+                <div class="bento-grid">
+                  <!-- Card 1: Whisper STT -->
+                  <div class="bento-card bento-wide">
+                    <div class="bento-card-header">
+                      <div class="bento-pill">STAGE 01 · ACOUSTIC DECODER</div>
+                      <span class="latency-chip">18ms LATENCY</span>
+                    </div>
+                    <div class="bento-content">
+                      <div class="pipeline-node-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF5C00" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                      </div>
+                      <h3>Faster-Whisper Neural STT</h3>
+                      <p>Continuous RMS voice activity detection (VAD) coupled to quantized transformer audio decoding. Converts personal speech directly into tokens with zero cloud audio leakage.</p>
+                      
+                      <!-- Mini Live Visualizer -->
+                      <div class="mini-spectrogram-bar">
+                        <span class="spec-bar s1"></span><span class="spec-bar s2"></span><span class="spec-bar s3"></span>
+                        <span class="spec-bar s4"></span><span class="spec-bar s5"></span><span class="spec-bar s6"></span>
+                        <span class="spec-bar s7"></span><span class="spec-bar s8"></span><span class="spec-bar s9"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 2: Qwen 2.5 3B Local -->
+                  <div class="bento-card bento-wide">
+                    <div class="bento-card-header">
+                      <div class="bento-pill">STAGE 02 · NEURAL REASONING</div>
+                      <span class="latency-chip">48 TOK/S PEAK</span>
+                    </div>
+                    <div class="bento-content">
+                      <div class="pipeline-node-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F0F3F6" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <h3>llama.cpp & Qwen 2.5 3B GGUF</h3>
+                      <p>AVX2/AVX-VNNI hardware-accelerated CPU inference with Q4_K_M weight quantization. Uncompromising precision without GPUs or remote data centers.</p>
+                      
+                      <div class="token-streaming-preview">
+                        <span class="token-pulse">Generating: "Sovereign intelligence is now active..."</span>
+                        <span class="blinking-cursor">█</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 3: Piper Neural TTS -->
+                  <div class="bento-card bento-wide">
+                    <div class="bento-card-header">
+                      <div class="bento-pill">STAGE 03 · SPEECH SYNTHESIS</div>
+                      <span class="latency-chip">18ms SYNTHESIS</span>
+                    </div>
+                    <div class="bento-content">
+                      <div class="pipeline-node-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF5C00" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                      </div>
+                      <h3>Piper Offline Neural TTS</h3>
+                      <p>Zero-dependency ONNX neural voice model (<code>en_US-ryan-medium</code>). Synthesizes natural cadence and human warmth in 120ms directly to ALSA/Web Audio.</p>
+                      
+                      <button class="test-speech-inline-btn" id="landingTestPiperBtn">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span>Listen to Piper Voice Sample</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- HARDWARE SHOWCASE SECTION (Panel 3 & 7 from Brand Kit) -->
+            <section class="landing-hardware-section">
+              <div class="section-container">
+                <div class="hardware-showcase-grid">
+                  
+                  <div class="hardware-text-column">
+                    <span class="section-tag">PHYSICAL EMBODIMENT</span>
+                    <h2 class="section-title">Comm-Node 01: The Tactile Transceiver</h2>
+                    <p class="section-sub">Inspired by precision-milled CNC aluminum instrumentation. TouchCall rejects infinite digital glass in favor of tactile certainty, knurled feedback, and intentional connection.</p>
+                    
+                    <ul class="hardware-spec-bullets">
+                      <li>
+                        <span class="spec-bullet-icon">■</span>
+                        <div>
+                          <strong>Matte-Black Anodized Billet</strong>
+                          <p>45-degree chamfered geometry milled to aerospace tolerances.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span class="spec-bullet-icon">■</span>
+                        <div>
+                          <strong>Knurled Rotary Encoder</strong>
+                          <p>Physical rotary control for VAD threshold, audio volume, and sensitivity tuning.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span class="spec-bullet-icon">■</span>
+                        <div>
+                          <strong>Phosphor Amber LED Edge Slice</strong>
+                          <p>Non-distracting low-frequency light indicating local model attention states.</p>
+                        </div>
+                      </li>
+                    </ul>
+
+                    <button class="hero-cta-outline mt-4" id="landingLaunchCallBtn">
+                      <span>Launch Interactive Voice Transceiver</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                  </div>
+
+                  <div class="hardware-interactive-column">
+                    <div class="interactive-token-chassis">
+                      <div class="token-metal-surface">
+                        <!-- Embossed Logo Mark -->
+                        <div class="token-embossed-mark">
+                          <svg width="40" height="40" viewBox="0 0 100 80" fill="none">
+                            <rect x="6" y="32" width="6" height="16" rx="3" fill="#404756" />
+                            <rect x="18" y="22" width="6" height="36" rx="3" fill="#404756" />
+                            <rect x="30" y="28" width="6" height="24" rx="3" fill="#404756" />
+                            <path d="M42 12 H62 V22 H42 Z" fill="#717B90" />
+                            <path d="M62 12 H82 L72 22 H62 Z" fill="#FF5C00" />
+                            <path d="M57 22 H67 V68 H57 Z" fill="#717B90" />
+                          </svg>
+                        </div>
+
+                        <!-- 3D Knurled Rotary Wheel -->
+                        <div class="knurled-rotary-assembly">
+                          <div class="knurled-wheel" id="landingKnobWheel">
+                            <div class="wheel-marker"></div>
+                          </div>
+                          <span class="knob-sub-label">DRAG TO ROTATE ENCODER</span>
+                        </div>
+
+                        <!-- Glowing Amber Slice -->
+                        <div class="amber-led-slice-glow"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            <!-- TYPOGRAPHIC MANIFESTO SECTION (Panel 5 from Launch Board) -->
+            <section class="landing-manifesto-section">
+              <div class="section-container">
+                <div class="manifesto-card">
+                  <span class="manifesto-pill">THE TOUCHCALL MANIFESTO</span>
+                  <h2 class="manifesto-giant-text">
+                    NOT YOUR SERVERS,<br>
+                    NOT YOUR BRAIN.
+                  </h2>
+                  <div class="manifesto-tagline">100% On-Device Neural Execution</div>
+                  
+                  <div class="manifesto-copy-grid">
+                    <p>
+                      Modern tech giants want your thoughts hosted on remote servers, metering your queries, scanning your prompts, and charging per token. They created an artificial dependency on cloud umbilical cords.
+                    </p>
+                    <p>
+                      TouchCall exists to cut that cord. By combining Faster-Whisper, Qwen 2.5 3B, and Piper TTS directly on your computer's silicon, we return full cognitive sovereignty to the individual. Offline, private, instantaneous.
+                    </p>
+                  </div>
+
+                  <div class="manifesto-cta-strip">
+                    <button class="primary-dock-btn" id="manifestoTerminalBtn">
+                      <span>ENTER INTERACTIVE RUNTIME</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="landing-footer">
+              <div class="section-container footer-content-row">
+                <div class="footer-left">
+                  <span class="footer-logo">TOUCHCALL // SOVEREIGN CORE</span>
+                  <span class="footer-copy">© 2026 Bare Metal Intelligence. Zero Telemetry. 100% Local.</span>
+                </div>
+                <div class="footer-right">
+                  <button class="footer-link-btn" id="footerBrandKitBtn">View Brand Kit Specs</button>
+                  <button class="footer-link-btn" id="footerTerminalBtn">Launch Terminal</button>
+                  <button class="footer-link-btn" id="footerVoiceBtn">Launch Voice Call</button>
+                </div>
+              </div>
+            </footer>
+
+          </div>
+        </section>
+
+        <!-- ================= 1. CHAT TERMINAL VIEW ================= -->
+        <section class="view-panel" id="chatView">
+          
+          <!-- Messages Scroll View -->
+          <div class="messages-stream" id="messagesContainer">
+            
+            <!-- Welcome Brand Hero Card -->
+            <div class="brand-hero-card" id="welcomeHero">
+              <div class="hero-chip">SOVEREIGN INTELLIGENCE</div>
+              <h1 class="hero-headline">ZERO CLOUD.<br>PURE SILICON.</h1>
+              <p class="hero-subtext">Direct hardware inference running on bare metal. Qwen 2.5 3B Instruct quantized to 4-bit, acoustic synthesis via Piper, and offline Whisper speech decoding.</p>
+              
+              <div class="quick-prompts-grid">
+                <button class="prompt-chip" data-prompt="What screen-free outdoor activities can I do for 2 hours today?">
+                  <span class="chip-dot"></span>
+                  <span>Screen-free outdoor suggestions</span>
+                </button>
+                <button class="prompt-chip" data-prompt="Explain how local GGUF quantization runs fast on modern CPU vector extensions.">
+                  <span class="chip-dot"></span>
+                  <span>How GGUF quantization works</span>
+                </button>
+                <button class="prompt-chip" data-prompt="Write a concise Python script using psutil to monitor CPU and RAM temperatures.">
+                  <span class="chip-dot"></span>
+                  <span>Write hardware monitoring script</span>
+                </button>
+                <button class="prompt-chip" data-prompt="Draft a clean architecture diagram for offline AI voice pipelines.">
+                  <span class="chip-dot"></span>
+                  <span>Local AI pipeline architecture</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Input Dock Area -->
+          <div class="input-dock-container">
+            <!-- Active Model & Streaming Indicators -->
+            <div class="dock-telemetry-bar">
+              <div class="telemetry-tag">
+                <span class="tag-label">RUNTIME:</span>
+                <span class="tag-val" id="backendTag">llama.cpp AVX2</span>
+              </div>
+              <div class="telemetry-tag">
+                <span class="tag-label">VELOCITY:</span>
+                <span class="tag-val" id="tpsTag">-- tok/s</span>
+              </div>
+              <div class="telemetry-tag">
+                <span class="tag-label">LATENCY:</span>
+                <span class="tag-val" id="latencyTag">-- ms</span>
+              </div>
+              <div class="telemetry-tag ml-auto">
+                <span class="tag-label">SECURITY:</span>
+                <span class="tag-val text-accent">100% AIR-GAPPED</span>
+              </div>
+            </div>
+
+            <!-- Input Box Shell -->
+            <div class="prompt-input-wrapper">
+              <div class="voice-wave-preview" id="voiceWavePreview" style="display: none;">
+                <canvas id="miniWaveCanvas" width="200" height="28"></canvas>
+                <span class="recording-label">LISTENING... CLICK TO STOP</span>
+              </div>
+
+              <textarea 
+                id="promptInput" 
+                rows="1" 
+                placeholder="Ask TouchCall or press mic for voice input..." 
+                autocomplete="off"
+              ></textarea>
+
+              <div class="input-actions">
+                <!-- Microphone / Audio Record Button -->
+                <button class="dock-action-btn" id="micBtn" title="Hold/Click to Record Audio (Faster-Whisper)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                  </svg>
+                </button>
+
+                <!-- Send Button -->
+                <button class="dock-action-btn primary-btn" id="sendBtn" title="Submit (Enter)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-footer-hint">
+              <span>TouchCall Core · Return to send, Shift+Return for newline · Audio synthesized via Piper TTS</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 2. TACTILE VOICE CALL VIEW (BRANDKIT PANEL 7) ================= -->
+        <section class="view-panel" id="voiceView">
+          <div class="tactile-hardware-stage">
+            
+            <!-- Hardware Token Frame (Derived from Brandkit Panel 7) -->
+            <div class="hardware-chassis">
+              
+              <!-- Hardware Header -->
+              <div class="chassis-header">
+                <div class="chassis-branding">
+                  <span class="chassis-title">TOUCHCALL // COMM-NODE 01</span>
+                  <span class="chassis-sub">TACTILE LOCAL TRANSCEIVER</span>
+                </div>
+                <div class="chassis-badge">
+                  <span class="led-indicator active"></span>
+                  <span id="callStateLabel">STANDBY</span>
+                </div>
+              </div>
+
+              <!-- Central Acoustic Waveform Display -->
+              <div class="chassis-display-window">
+                <div class="window-grid-lines"></div>
+                <canvas id="voiceCallCanvas" width="600" height="180"></canvas>
+                
+                <!-- Live Subtitles & Transcript -->
+                <div class="live-subtitle-box" id="voiceSubtitleBox">
+                  <p class="subtitle-text" id="voiceSubtitleText">TouchCall is ready. Tap the call disc below to initiate audio session.</p>
+                </div>
+              </div>
+
+              <!-- Lower Physical Controls & Knurled Rotary Dial -->
+              <div class="chassis-controls">
+                
+                <!-- Rotary Dial Simulation -->
+                <div class="rotary-control-group">
+                  <div class="knurled-rotary-dial" id="rotaryKnob">
+                    <div class="knob-marker"></div>
+                  </div>
+                  <span class="control-label">SENSITIVITY / VAD</span>
+                </div>
+
+                <!-- Central Primary Touch Call Action -->
+                <div class="call-action-center">
+                  <button class="call-trigger-orb" id="voiceCallOrbBtn">
+                    <div class="orb-pulse-rings"></div>
+                    <svg class="orb-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                      <line x1="12" y1="19" x2="12" y2="23"/>
+                      <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                  </button>
+                  <span class="call-orb-caption" id="voiceCallCaption">TAP TO TRANSMIT</span>
+                </div>
+
+                <!-- Hardware Audio Mute / Speaker Toggle -->
+                <div class="rotary-control-group">
+                  <button class="mini-hardware-toggle" id="ttsVoiceToggleBtn" title="Toggle Voice Playback">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                  </button>
+                  <span class="control-label">PIPER AUDIO</span>
+                </div>
+
+              </div>
+
+              <!-- Amber LED Edge Strip -->
+              <div class="chassis-amber-led-slice"></div>
+
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- SIDEBAR: INFERENCE CONTROLS & TELEMETRY -->
+      <aside class="sidebar-panel" id="sidebarPanel">
+        <div class="sidebar-header">
+          <div class="sidebar-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>TACTICAL CONFIG</span>
+          </div>
+          <button class="mini-close-btn" id="closeSidebarBtn">&times;</button>
+        </div>
+
+        <div class="sidebar-scrollable">
+          
+          <!-- Presets Group -->
+          <div class="config-section">
+            <span class="section-heading">SYSTEM PERSONA</span>
+            <div class="preset-pill-list">
+              <button class="preset-badge active" data-preset="touchcall">TouchCall Voice</button>
+              <button class="preset-badge" data-preset="coder">Code Architect</button>
+              <button class="preset-badge" data-preset="general">General AI</button>
+              <button class="preset-badge" data-preset="custom">Custom Prompt</button>
+            </div>
+            <textarea id="customSystemPromptInput" rows="3" class="prompt-custom-box"></textarea>
+          </div>
+
+          <!-- Parameter Sliders -->
+          <div class="config-section">
+            <span class="section-heading">SAMPLER HYPERPARAMETERS</span>
+            
+            <div class="slider-control">
+              <div class="slider-meta">
+                <span>Temperature</span>
+                <span class="slider-val" id="tempVal">0.7</span>
+              </div>
+              <input type="range" id="tempSlider" min="0.1" max="1.5" step="0.05" value="0.7">
+            </div>
+
+            <div class="slider-control">
+              <div class="slider-meta">
+                <span>Max Tokens</span>
+                <span class="slider-val" id="maxTokensVal">512</span>
+              </div>
+              <input type="range" id="maxTokensSlider" min="64" max="1024" step="64" value="512">
+            </div>
+
+            <div class="slider-control">
+              <div class="slider-meta">
+                <span>Top-P Nucleus</span>
+                <span class="slider-val" id="topPVal">0.95</span>
+              </div>
+              <input type="range" id="topPSlider" min="0.1" max="1.0" step="0.05" value="0.95">
+            </div>
+          </div>
+
+          <!-- Hardware Telemetry Card -->
+          <div class="config-section">
+            <span class="section-heading">SILICON TELEMETRY</span>
+            <div class="telemetry-card">
+              <div class="telemetry-row">
+                <span class="lbl">Memory footprint</span>
+                <span class="val" id="ramStat">4.2 GB / 16 GB</span>
+              </div>
+              <div class="telemetry-progress-bar">
+                <div class="progress-fill" id="ramProgress" style="width: 26%;"></div>
+              </div>
+
+              <div class="telemetry-row mt-2">
+                <span class="lbl">CPU Utilization</span>
+                <span class="val" id="cpuStat">12%</span>
+              </div>
+              <div class="telemetry-progress-bar">
+                <div class="progress-fill" id="cpuProgress" style="width: 12%;"></div>
+              </div>
+
+              <div class="telemetry-row mt-2">
+                <span class="lbl">Model Context</span>
+                <span class="val">2,048 tokens</span>
+              </div>
+              <div class="telemetry-row">
+                <span class="lbl">Whisper STT</span>
+                <span class="val text-success">Online (small/int8)</span>
+              </div>
+              <div class="telemetry-row">
+                <span class="lbl">Piper TTS Voice</span>
+                <span class="val text-success">en_US-ryan-medium</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reset / Clear Action -->
+          <div class="config-section pt-0">
+            <button class="clear-session-btn" id="clearChatBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Purge Active Session</span>
+            </button>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ================= BRAND IDENTITY DECK MODAL ================= -->
+  <div class="modal-backdrop" id="brandModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-brand-tag">
+          <span class="tag-accent">TOUCHCALL</span>
+          <span class="tag-divider">/</span>
+          <span>IDENTITY SYSTEM & BRAND KIT SPEC</span>
+        </div>
+        
+        <div class="modal-deck-switcher">
+          <button class="deck-btn active" id="btnShowLaunchBoard">Landing Launch Deck (2×3)</button>
+          <button class="deck-btn" id="btnShow3x3Board">Identity Guidelines (3×3)</button>
+        </div>
+
+        <button class="modal-close-btn" id="closeBrandModalBtn">&times;</button>
+      </div>
+
+      <div class="modal-body-scrollable">
+        
+        <!-- Hero Presentation Board Image -->
+        <div class="brand-image-wrapper">
+          <img 
+            id="brandBoardImg" 
+            src="/static/assets/touchcall_launch_board.jpg" 
+            alt="TouchCall Brand Presentation Board" 
+            class="brand-board-img" 
+          />
+          <div class="image-caption-bar" id="brandCaptionBar">
+            <span>TOUCHCALL 2×3 CAMPAIGN LAUNCH DECK · SWISS CAD SPECIFICATION · CARBON VOID CANVAS</span>
+          </div>
+        </div>
+
+        <!-- 5-Step Color Palette Tokens (Clickable) -->
+        <div class="brand-spec-section">
+          <h3 class="spec-title">CALIBRATED COLOR SYSTEM</h3>
+          <div class="color-palette-cards">
+            <div class="swatch-card" data-copy="#0B0C0E">
+              <div class="swatch-color" style="background: #0B0C0E; border: 1px solid #272A35;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Carbon Void</span>
+                <span class="swatch-hex">#0B0C0E</span>
+              </div>
+            </div>
+
+            <div class="swatch-card" data-copy="#181920">
+              <div class="swatch-color" style="background: #181920; border: 1px solid #272A35;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Titanium Surface</span>
+                <span class="swatch-hex">#181920</span>
+              </div>
+            </div>
+
+            <div class="swatch-card" data-copy="#FF5C00">
+              <div class="swatch-color" style="background: #FF5C00;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Neural Amber</span>
+                <span class="swatch-hex">#FF5C00</span>
+              </div>
+            </div>
+
+            <div class="swatch-card" data-copy="#8B949E">
+              <div class="swatch-color" style="background: #8B949E;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Slate Mono</span>
+                <span class="swatch-hex">#8B949E</span>
+              </div>
+            </div>
+
+            <div class="swatch-card" data-copy="#F0F3F6">
+              <div class="swatch-color" style="background: #F0F3F6;"></div>
+              <div class="swatch-info">
+                <span class="swatch-name">Optical White</span>
+                <span class="swatch-hex">#F0F3F6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Core Brand Logic & Rationale -->
+        <div class="brand-spec-section">
+          <h3 class="spec-title">CORE BRAND METAPHOR & LOGO CONSTRUCTION</h3>
+          <div class="spec-grid-2col">
+            <div class="spec-card">
+              <h4>The Sovereign Node</h4>
+              <p>TouchCall stands against cloud surveillance and rent-seeking APIs. The emblem fuses the geometric letter <strong>T</strong> with a symmetric acoustic equalizer and an internal circuit node, expressing direct voice interaction on personal silicon.</p>
+            </div>
+            <div class="spec-card">
+              <h4>Tactile Hardware Token</h4>
+              <p>Inspired by precision-milled CNC aluminum instruments, knurled dials, and physical telecommunication transceivers. The design language values silence, tactile confidence, and extreme functional efficiency.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element for Piper TTS Playback -->
+  <audio id="piperAudioPlayer" style="display: none;"></audio>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
