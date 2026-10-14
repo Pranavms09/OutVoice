@@ -1,4 +1,12 @@
+# Speech, voice and audio
 faster-whisper>=1.0.0
 piper-tts>=1.2.0
-pyaudio>=0.2.14
 numpy>=1.26.0
+pyaudio>=0.2.14          # CLI agent only (touchcall.py); needs PortAudio headers
+
+# Web app (web/server.py)
+fastapi>=0.110.0
+uvicorn>=0.29.0
+python-multipart>=0.0.9  # audio uploads to /api/transcribe
+httpx>=0.27.0            # streams from llama-server
+psutil>=5.9.0            # CPU/RAM telemetry

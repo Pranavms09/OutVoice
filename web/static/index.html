@@ -389,176 +389,107 @@
           </div>
         </section>
 
-        <!-- ================= 1. CHAT TERMINAL VIEW ================= -->
+        <!-- ================= 1. TERMINAL (CHAT) VIEW ================= -->
         <section class="view-panel" id="chatView">
-          
-          <!-- Messages Scroll View -->
-          <div class="messages-stream" id="messagesContainer">
-            
-            <!-- Welcome Brand Hero Card -->
-            <div class="brand-hero-card" id="welcomeHero">
-              <div class="hero-chip">SOVEREIGN INTELLIGENCE</div>
-              <h1 class="hero-headline">ZERO CLOUD.<br>PURE SILICON.</h1>
-              <p class="hero-subtext">Direct hardware inference running on bare metal. Qwen 2.5 3B Instruct quantized to 4-bit, acoustic synthesis via Piper, and offline Whisper speech decoding.</p>
-              
-              <div class="quick-prompts-grid">
-                <button class="prompt-chip" data-prompt="What screen-free outdoor activities can I do for 2 hours today?">
-                  <span class="chip-dot"></span>
-                  <span>Screen-free outdoor suggestions</span>
-                </button>
-                <button class="prompt-chip" data-prompt="Explain how local GGUF quantization runs fast on modern CPU vector extensions.">
-                  <span class="chip-dot"></span>
-                  <span>How GGUF quantization works</span>
-                </button>
-                <button class="prompt-chip" data-prompt="Write a concise Python script using psutil to monitor CPU and RAM temperatures.">
-                  <span class="chip-dot"></span>
-                  <span>Write hardware monitoring script</span>
-                </button>
-                <button class="prompt-chip" data-prompt="Draft a clean architecture diagram for offline AI voice pipelines.">
-                  <span class="chip-dot"></span>
-                  <span>Local AI pipeline architecture</span>
-                </button>
+          <div class="term">
+            <div class="term-stream" id="messagesContainer" aria-live="polite">
+              <div class="term-empty" id="emptyState">
+                <span class="t-label"><span class="t-dot"></span>TERMINAL · LOCAL SESSION</span>
+                <h2 class="term-empty-title">What should we work on?</h2>
+                <p class="term-empty-sub">Qwen 2.5 3B runs on this machine. Nothing you type or say leaves it.</p>
+                <div class="term-chips">
+                  <button class="prompt-chip" data-prompt="What screen-free outdoor activities can I do for 2 hours today?">Screen-free ideas for this afternoon</button>
+                  <button class="prompt-chip" data-prompt="Explain how local GGUF quantization runs fast on modern CPU vector extensions.">How GGUF quantization works</button>
+                  <button class="prompt-chip" data-prompt="Write a concise Python script using psutil to monitor CPU and RAM usage.">Write a CPU/RAM monitor script</button>
+                  <button class="prompt-chip" data-prompt="Explain how an offline voice assistant pipeline works: speech-to-text, LLM, text-to-speech.">How an offline voice pipeline works</button>
+                </div>
               </div>
             </div>
 
-          </div>
-
-          <!-- Input Dock Area -->
-          <div class="input-dock-container">
-            <!-- Active Model & Streaming Indicators -->
-            <div class="dock-telemetry-bar">
-              <div class="telemetry-tag">
-                <span class="tag-label">RUNTIME:</span>
-                <span class="tag-val" id="backendTag">llama.cpp AVX2</span>
+            <div class="term-composer">
+              <div class="composer-box">
+                <div class="composer-rec" id="voiceWavePreview" hidden>
+                  <canvas id="miniWaveCanvas" width="240" height="28"></canvas>
+                  <span>Listening · tap the mic to stop</span>
+                </div>
+                <textarea id="promptInput" rows="1" placeholder="Message TouchCall…" autocomplete="off" aria-label="Message TouchCall"></textarea>
+                <div class="composer-actions">
+                  <button class="c-btn" id="micBtn" title="Voice input (Whisper)" aria-label="Voice input">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                  </button>
+                  <button class="c-btn c-primary" id="sendBtn" title="Send (Enter)" aria-label="Send">
+                    <svg class="i-send" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    <svg class="i-stop" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                  </button>
+                </div>
               </div>
-              <div class="telemetry-tag">
-                <span class="tag-label">VELOCITY:</span>
-                <span class="tag-val" id="tpsTag">-- tok/s</span>
+              <div class="composer-meta">
+                <span class="meta-chip"><span class="t-dot" id="llmDot"></span><span id="backendTag">llama-server</span></span>
+                <span class="meta-chip" id="tpsTag">-- tok/s</span>
+                <span class="meta-chip" id="latencyTag">-- ms TTFT</span>
+                <button class="meta-chip meta-toggle" id="chatTtsToggle" aria-pressed="true">Piper voice: on</button>
+                <button class="meta-chip meta-toggle" id="chatClearBtn">Clear</button>
+                <span class="meta-hint">Enter to send · Shift+Enter for a new line</span>
               </div>
-              <div class="telemetry-tag">
-                <span class="tag-label">LATENCY:</span>
-                <span class="tag-val" id="latencyTag">-- ms</span>
-              </div>
-              <div class="telemetry-tag ml-auto">
-                <span class="tag-label">SECURITY:</span>
-                <span class="tag-val text-accent">100% AIR-GAPPED</span>
-              </div>
-            </div>
-
-            <!-- Input Box Shell -->
-            <div class="prompt-input-wrapper">
-              <div class="voice-wave-preview" id="voiceWavePreview" style="display: none;">
-                <canvas id="miniWaveCanvas" width="200" height="28"></canvas>
-                <span class="recording-label">LISTENING... CLICK TO STOP</span>
-              </div>
-
-              <textarea 
-                id="promptInput" 
-                rows="1" 
-                placeholder="Ask TouchCall or press mic for voice input..." 
-                autocomplete="off"
-              ></textarea>
-
-              <div class="input-actions">
-                <!-- Microphone / Audio Record Button -->
-                <button class="dock-action-btn" id="micBtn" title="Hold/Click to Record Audio (Faster-Whisper)">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                    <line x1="12" y1="19" x2="12" y2="23"/>
-                    <line x1="8" y1="23" x2="16" y2="23"/>
-                  </svg>
-                </button>
-
-                <!-- Send Button -->
-                <button class="dock-action-btn primary-btn" id="sendBtn" title="Submit (Enter)">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="input-footer-hint">
-              <span>TouchCall Core · Return to send, Shift+Return for newline · Audio synthesized via Piper TTS</span>
             </div>
           </div>
         </section>
 
-        <!-- ================= 2. TACTILE VOICE CALL VIEW (BRANDKIT PANEL 7) ================= -->
+        <!-- ================= 2. VOICE CALL VIEW ================= -->
         <section class="view-panel" id="voiceView">
-          <div class="tactile-hardware-stage">
-            
-            <!-- Hardware Token Frame (Derived from Brandkit Panel 7) -->
-            <div class="hardware-chassis">
-              
-              <!-- Hardware Header -->
-              <div class="chassis-header">
-                <div class="chassis-branding">
-                  <span class="chassis-title">TOUCHCALL // COMM-NODE 01</span>
-                  <span class="chassis-sub">TACTILE LOCAL TRANSCEIVER</span>
-                </div>
-                <div class="chassis-badge">
-                  <span class="led-indicator active"></span>
-                  <span id="callStateLabel">STANDBY</span>
-                </div>
+          <div class="call">
+            <div class="call-stage">
+              <div class="call-status">
+                <span class="call-dot" id="callDot"></span>
+                <span id="callStateLabel">READY</span>
+                <span class="call-timer" id="callTimer">00:00</span>
               </div>
 
-              <!-- Central Acoustic Waveform Display -->
-              <div class="chassis-display-window">
-                <div class="window-grid-lines"></div>
-                <canvas id="voiceCallCanvas" width="600" height="180"></canvas>
-                
-                <!-- Live Subtitles & Transcript -->
-                <div class="live-subtitle-box" id="voiceSubtitleBox">
-                  <p class="subtitle-text" id="voiceSubtitleText">TouchCall is ready. Tap the call disc below to initiate audio session.</p>
-                </div>
+              <button class="call-orb" id="voiceCallOrbBtn" aria-label="Start call">
+                <canvas id="voiceCallCanvas" width="640" height="640"></canvas>
+                <span class="orb-core">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                </span>
+              </button>
+
+              <p class="call-hint" id="callHint">Start a call and speak naturally. TouchCall answers when you pause.</p>
+
+              <div class="call-controls">
+                <button class="call-ctl" id="callMuteBtn" aria-pressed="false" disabled>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                  <span>Mute</span>
+                </button>
+                <button class="call-main" id="callStartBtn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <span id="callStartLabel">Start call</span>
+                </button>
+                <button class="call-ctl" id="ttsVoiceToggleBtn" aria-pressed="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span>Voice on</span>
+                </button>
               </div>
 
-              <!-- Lower Physical Controls & Knurled Rotary Dial -->
-              <div class="chassis-controls">
-                
-                <!-- Rotary Dial Simulation -->
-                <div class="rotary-control-group">
-                  <div class="knurled-rotary-dial" id="rotaryKnob">
-                    <div class="knob-marker"></div>
-                  </div>
-                  <span class="control-label">SENSITIVITY / VAD</span>
+              <div class="call-settings">
+                <div class="mode-seg" role="group" aria-label="Talk mode">
+                  <button class="mode-btn active" data-mode="handsfree">Hands-free</button>
+                  <button class="mode-btn" data-mode="ptt">Push-to-talk</button>
                 </div>
-
-                <!-- Central Primary Touch Call Action -->
-                <div class="call-action-center">
-                  <button class="call-trigger-orb" id="voiceCallOrbBtn">
-                    <div class="orb-pulse-rings"></div>
-                    <svg class="orb-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                      <line x1="12" y1="19" x2="12" y2="23"/>
-                      <line x1="8" y1="23" x2="16" y2="23"/>
-                    </svg>
-                  </button>
-                  <span class="call-orb-caption" id="voiceCallCaption">TAP TO TRANSMIT</span>
-                </div>
-
-                <!-- Hardware Audio Mute / Speaker Toggle -->
-                <div class="rotary-control-group">
-                  <button class="mini-hardware-toggle" id="ttsVoiceToggleBtn" title="Toggle Voice Playback">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    </svg>
-                  </button>
-                  <span class="control-label">PIPER AUDIO</span>
-                </div>
-
+                <label class="sens">
+                  <span>Mic sensitivity</span>
+                  <input type="range" id="vadSensitivity" min="1" max="10" step="1" value="6">
+                </label>
               </div>
-
-              <!-- Amber LED Edge Strip -->
-              <div class="chassis-amber-led-slice"></div>
-
             </div>
 
+            <aside class="call-log" aria-label="Live transcript">
+              <div class="log-head">
+                <span class="t-label">LIVE TRANSCRIPT</span>
+                <button class="meta-chip meta-toggle" id="callLogClear">Clear</button>
+              </div>
+              <div class="log-list" id="callTranscript">
+                <p class="log-empty">Your call transcript will appear here.</p>
+              </div>
+            </aside>
           </div>
         </section>
 
