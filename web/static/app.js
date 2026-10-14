@@ -69,30 +69,11 @@ const DOM = {
   tabLandingBtn: document.getElementById('tabLandingBtn'),
   tabChatBtn: document.getElementById('tabChatBtn'),
   tabVoiceBtn: document.getElementById('tabVoiceBtn'),
-  brandLogoBtn: document.getElementById('brandLogoBtn'),
   
   // Header Telemetry
-  modelPill: document.getElementById('modelPill'),
-  ttftPill: document.getElementById('ttftPill'),
   backendTag: document.getElementById('backendTag'),
   tpsTag: document.getElementById('tpsTag'),
   latencyTag: document.getElementById('latencyTag'),
-  hudRam: document.getElementById('hudRam'),
-  
-  // Landing Page Interactive Elements
-  ambientHeroCanvas: document.getElementById('ambientHeroCanvas'),
-  heroDockWaveCanvas: document.getElementById('heroDockWaveCanvas'),
-  heroDirectPromptInput: document.getElementById('heroDirectPromptInput'),
-  heroLaunchBtn: document.getElementById('heroLaunchBtn'),
-  heroOpenVoiceBtn: document.getElementById('heroOpenVoiceBtn'),
-  heroOpenBrandBtn: document.getElementById('heroOpenBrandBtn'),
-  landingTestPiperBtn: document.getElementById('landingTestPiperBtn'),
-  landingLaunchCallBtn: document.getElementById('landingLaunchCallBtn'),
-  landingKnobWheel: document.getElementById('landingKnobWheel'),
-  manifestoTerminalBtn: document.getElementById('manifestoTerminalBtn'),
-  footerBrandKitBtn: document.getElementById('footerBrandKitBtn'),
-  footerTerminalBtn: document.getElementById('footerTerminalBtn'),
-  footerVoiceBtn: document.getElementById('footerVoiceBtn'),
   
   // Chat Terminal
   messagesContainer: document.getElementById('messagesContainer'),
@@ -139,16 +120,7 @@ const DOM = {
   modeBtns: document.querySelectorAll('#voiceView .mode-btn'),
   vadSensitivity: document.getElementById('vadSensitivity'),
   callTranscript: document.getElementById('callTranscript'),
-  callLogClear: document.getElementById('callLogClear'),
-  
-  // Brand Kit Modal
-  brandModal: document.getElementById('brandModal'),
-  openBrandModalBtn: document.getElementById('openBrandModalBtn'),
-  closeBrandModalBtn: document.getElementById('closeBrandModalBtn'),
-  brandBoardImg: document.getElementById('brandBoardImg'),
-  brandCaptionBar: document.getElementById('brandCaptionBar'),
-  btnShowLaunchBoard: document.getElementById('btnShowLaunchBoard'),
-  btnShow3x3Board: document.getElementById('btnShow3x3Board')
+  callLogClear: document.getElementById('callLogClear')
 };
 
 // ==========================================
@@ -171,10 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchTelemetry();
   setInterval(fetchTelemetry, 4000);
   
-  // Initialize Visual Animations
-  initAmbientHeroCanvas();
-  initHeroDockWaveform();
-  initLandingKnobPhysics();
   initVoiceCall();
 });
 
@@ -183,44 +151,6 @@ function initEventListeners() {
   if (DOM.tabLandingBtn) DOM.tabLandingBtn.addEventListener('click', () => switchView('landing'));
   if (DOM.tabChatBtn) DOM.tabChatBtn.addEventListener('click', () => switchView('chat'));
   if (DOM.tabVoiceBtn) DOM.tabVoiceBtn.addEventListener('click', () => switchView('voice'));
-  if (DOM.brandLogoBtn) DOM.brandLogoBtn.addEventListener('click', () => switchView('landing'));
-
-  // Landing Page Interactive Triggers
-  if (DOM.heroLaunchBtn) {
-    DOM.heroLaunchBtn.addEventListener('click', () => {
-      const prompt = DOM.heroDirectPromptInput ? DOM.heroDirectPromptInput.value.trim() : '';
-      switchView('chat');
-      if (prompt) {
-        DOM.promptInput.value = prompt;
-        handleUserSubmit();
-      }
-    });
-  }
-
-  if (DOM.heroDirectPromptInput) {
-    DOM.heroDirectPromptInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        DOM.heroLaunchBtn.click();
-      }
-    });
-  }
-
-  if (DOM.heroOpenVoiceBtn) DOM.heroOpenVoiceBtn.addEventListener('click', () => switchView('voice'));
-  if (DOM.heroOpenBrandBtn) DOM.heroOpenBrandBtn.addEventListener('click', () => openBrandModal());
-  if (DOM.landingLaunchCallBtn) DOM.landingLaunchCallBtn.addEventListener('click', () => switchView('voice'));
-  if (DOM.manifestoTerminalBtn) DOM.manifestoTerminalBtn.addEventListener('click', () => switchView('chat'));
-  
-  if (DOM.footerBrandKitBtn) DOM.footerBrandKitBtn.addEventListener('click', () => openBrandModal());
-  if (DOM.footerTerminalBtn) DOM.footerTerminalBtn.addEventListener('click', () => switchView('chat'));
-  if (DOM.footerVoiceBtn) DOM.footerVoiceBtn.addEventListener('click', () => switchView('voice'));
-
-  // Inline Piper Speech Test
-  if (DOM.landingTestPiperBtn) {
-    DOM.landingTestPiperBtn.addEventListener('click', () => {
-      const sampleText = "TouchCall local intelligence is online. Executing neural inference directly on personal silicon.";
-      synthesizeAndPlay(sampleText);
-    });
-  }
 
   // Prompt Send & Input Auto-grow
   DOM.sendBtn.addEventListener('click', () => state.isGenerating ? stopGeneration() : handleUserSubmit());
@@ -274,56 +204,16 @@ function initEventListeners() {
 
   DOM.clearChatBtn.addEventListener('click', clearConversation);
 
-  // Brand Kit Modal & Deck Switcher
-  DOM.openBrandModalBtn.addEventListener('click', openBrandModal);
-  DOM.closeBrandModalBtn.addEventListener('click', () => DOM.brandModal.style.display = 'none');
-  DOM.brandModal.addEventListener('click', (e) => {
-    if (e.target === DOM.brandModal) DOM.brandModal.style.display = 'none';
-  });
 
-  if (DOM.btnShowLaunchBoard) {
-    DOM.btnShowLaunchBoard.addEventListener('click', () => {
-      DOM.btnShowLaunchBoard.classList.add('active');
-      DOM.btnShow3x3Board.classList.remove('active');
-      DOM.brandBoardImg.src = '/static/assets/touchcall_launch_board.jpg';
-      DOM.brandCaptionBar.innerText = 'TOUCHCALL 2×3 CAMPAIGN LAUNCH DECK · SWISS CAD SPECIFICATION · CARBON VOID CANVAS';
-    });
-  }
-
-  if (DOM.btnShow3x3Board) {
-    DOM.btnShow3x3Board.addEventListener('click', () => {
-      DOM.btnShow3x3Board.classList.add('active');
-      DOM.btnShowLaunchBoard.classList.remove('active');
-      DOM.brandBoardImg.src = '/static/assets/touchcall_brand_kit.jpg';
-      DOM.brandCaptionBar.innerText = 'TOUCHCALL 3×3 IDENTITY BOARD · SWISS GRID SYSTEM · ARCHITECTURAL CANVAS';
-    });
-  }
-
-  // Color Swatch Copy Action
-  document.querySelectorAll('.swatch-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const hex = card.getAttribute('data-copy');
-      if (hex) {
-        navigator.clipboard.writeText(hex).then(() => {
-          const nameEl = card.querySelector('.swatch-name');
-          const orig = nameEl.innerText;
-          nameEl.innerText = 'COPIED!';
-          setTimeout(() => nameEl.innerText = orig, 1200);
-        });
-      }
-    });
-  });
-
-}
-
-function openBrandModal() {
-  DOM.brandModal.style.display = 'flex';
 }
 
 function switchView(viewName) {
   // Leaving the call screen hangs up so the mic is never left open in the background.
   if (viewName !== 'voice' && state.call.active) endCall();
   state.activeView = viewName;
+  document.body.dataset.view = viewName;
+  // Keep the view in the URL so reloads and links from the Overview page land correctly.
+  history.replaceState(null, '', `#${viewName}`);
 
   // Toggle View Panels
   if (DOM.landingView) DOM.landingView.classList.toggle('active', viewName === 'landing');
@@ -390,7 +280,6 @@ async function fetchTelemetry() {
     // Update Hardware gauges
     const ramText = `${data.memory_used_gb} GB / ${data.memory_total_gb} GB`;
     DOM.ramStat.innerText = ramText;
-    if (DOM.hudRam) DOM.hudRam.innerText = ramText;
 
     const ramPct = Math.round((data.memory_used_gb / data.memory_total_gb) * 100);
     DOM.ramProgress.style.width = `${ramPct}%`;
@@ -400,6 +289,7 @@ async function fetchTelemetry() {
 
     DOM.backendTag.innerText = data.server_active ? 'llama-server · online' : 'llama-completion CLI (fallback)';
     DOM.llmDot.className = `t-dot ${data.server_active ? 'online' : 'offline'}`;
+
   } catch (err) {
     DOM.backendTag.innerText = 'backend unreachable';
     DOM.llmDot.className = 't-dot offline';
@@ -496,7 +386,6 @@ async function handleUserSubmit() {
             if (!firstTokenTime) {
               firstTokenTime = performance.now();
               const ttft = Math.round(firstTokenTime - startTime);
-              DOM.ttftPill.innerText = `${ttft}ms TTFT`;
               DOM.latencyTag.innerText = `${ttft}ms TTFT`;
             }
             accumulatedText += parsed.token;
@@ -1276,167 +1165,3 @@ function initCallVisualizer() {
   };
   draw();
 }
-
-function initLandingKnobPhysics() {
-  let isDragging = false;
-  let currentAngle = 0;
-  let startY = 0;
-
-  if (!DOM.landingKnobWheel) return;
-
-  DOM.landingKnobWheel.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startY = e.clientY;
-    document.body.style.cursor = 'grabbing';
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const deltaY = startY - e.clientY;
-    currentAngle = (currentAngle + deltaY * 1.8) % 360;
-    DOM.landingKnobWheel.style.transform = `rotate(${currentAngle}deg)`;
-    startY = e.clientY;
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      document.body.style.cursor = 'default';
-    }
-  });
-}
-
-// ==========================================
-// ANIMATED AMBIENT CANVAS (HERO BACKGROUND)
-// ==========================================
-
-function initAmbientHeroCanvas() {
-  const canvas = DOM.ambientHeroCanvas;
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  let width = canvas.width = canvas.parentElement.offsetWidth;
-  let height = canvas.height = canvas.parentElement.offsetHeight;
-
-  window.addEventListener('resize', () => {
-    if (!canvas.parentElement) return;
-    width = canvas.width = canvas.parentElement.offsetWidth;
-    height = canvas.height = canvas.parentElement.offsetHeight;
-  });
-
-  const particles = [];
-  const particleCount = 45;
-  let mouse = { x: width / 2, y: height / 2, active: false };
-
-  canvas.parentElement.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-    mouse.active = true;
-  });
-
-  canvas.parentElement.addEventListener('mouseleave', () => {
-    mouse.active = false;
-  });
-
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6,
-      radius: Math.random() * 2 + 1,
-      color: Math.random() > 0.4 ? '#FF5C00' : '#8B949E'
-    });
-  }
-
-  function renderAmbient() {
-    requestAnimationFrame(renderAmbient);
-    ctx.clearRect(0, 0, width, height);
-
-    // Draw connecting circuit links
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255, 92, 0, ${(1 - dist / 120) * 0.18})`;
-          ctx.lineWidth = 1;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Update and draw particles
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > width) p.vx *= -1;
-      if (p.y < 0 || p.y > height) p.vy *= -1;
-
-      // Mouse attraction / gentle interaction
-      if (mouse.active) {
-        const mdx = mouse.x - p.x;
-        const mdy = mouse.y - p.y;
-        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (mdist < 140) {
-          p.x += (mdx / mdist) * 0.8;
-          p.y += (mdy / mdist) * 0.8;
-        }
-      }
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = p.color === '#FF5C00' ? 6 : 0;
-      ctx.fill();
-    }
-  }
-
-  renderAmbient();
-}
-
-// ==========================================
-// HERO FLOATING DOCK WAVEFORM CANVAS
-// ==========================================
-
-function initHeroDockWaveform() {
-  const canvas = DOM.heroDockWaveCanvas;
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  function renderDockWave() {
-    requestAnimationFrame(renderDockWave);
-    const width = canvas.width;
-    const height = canvas.height;
-    ctx.clearRect(0, 0, width, height);
-
-    const barCount = 28;
-    const barWidth = 4;
-    const gap = (width - (barCount * barWidth)) / (barCount + 1);
-    const t = Date.now() * 0.003;
-
-    for (let i = 0; i < barCount; i++) {
-      const h = Math.sin(t + i * 0.35) * 8 + 14;
-      const x = gap + i * (barWidth + gap);
-      const y = (height - h) / 2;
-
-      ctx.fillStyle = '#FF5C00';
-      ctx.shadowColor = 'rgba(255, 92, 0, 0.4)';
-      ctx.shadowBlur = 4;
-      ctx.beginPath();
-      ctx.roundRect(x, y, barWidth, h, [2]);
-      ctx.fill();
-    }
-  }
-
-  renderDockWave();
-}
-

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TouchCall Overview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Shown inside the app's Overview tab (index.html). App links use target="_top" so the app switches views. -->
+  <style>
+    :root {
+      --carbon: #0B0C0E;
+      --canvas: #0E1015;
+      --well: #111317;
+      --ti-1: #161820;
+      --ti-2: #1A1D26;
+      --hair: #272B38;
+      --hair-hi: #383D4E;
+      --text: #F0F3F6;
+      --slate: #8B949E;
+      --muted: #565D6D;
+      --amber: #FF5C00;
+      --cyan: #00E5FF;
+      --sans: 'Geist', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --gutter: clamp(16px, 4vw, 56px);
+      --section: clamp(96px, 12vw, 168px);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--carbon); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2 { font-weight: 300; letter-spacing: -0.035em; line-height: 1.02; }
+    h2 { font-size: clamp(36px, 4.6vw, 64px); }
+    .wrap { max-width: 1360px; margin: 0 auto; padding: 0 var(--gutter); }
+    .mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+    .lead { color: var(--slate); font-size: 17px; max-width: 46ch; }
+    .pip { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); margin-right: 8px; vertical-align: 1px; }
+    .pip.amber { background: var(--amber); }
+
+    .btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 4px; font: 600 14px/1 var(--sans); text-decoration: none; border: 1px solid transparent; transition: border-color .1s linear, background .1s linear, opacity .1s; }
+    .btn-primary { background: var(--amber); color: var(--carbon); border-color: var(--amber); }
+    .btn-primary:hover { opacity: .88; }
+    .btn-ghost { background: var(--ti-1); border-color: var(--hair); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--hair-hi); background: var(--ti-2); }
+    .link { font-size: 15px; text-decoration: none; border-bottom: 1px solid var(--hair-hi); padding-bottom: 3px; transition: border-color .1s; }
+    .link:hover { border-color: var(--amber); }
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+    /* 1. HERO */
+    .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; isolation: isolate; }
+    .hero > .wrap { width: 100%; }
+    .hero-bg { position: absolute; inset: 0; z-index: -1; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 70% center; }
+    .hero-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,12,14,.92) 0%, rgba(11,12,14,.55) 45%, rgba(11,12,14,.1) 100%), linear-gradient(0deg, rgba(11,12,14,.95) 0%, rgba(11,12,14,0) 55%); }
+    .hero-body { margin-top: auto; padding-top: 64px; padding-bottom: clamp(48px, 8vw, 96px); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 32px; }
+    .chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border: 1px solid var(--hair); background: rgba(17,19,23,.7); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--cyan); }
+    .hero h1 { font-size: clamp(48px, 7.4vw, 112px); margin: 28px 0 24px; }
+    .hero .lead { margin-bottom: 36px; }
+    .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+    .hero-caption { text-align: right; line-height: 2; }
+
+    /* 2. ZERO */
+    .zero { position: relative; padding: var(--section) 0; text-align: center; overflow: hidden; background-image: radial-gradient(rgba(240,243,246,.06) 1px, transparent 1px); background-size: 24px 24px; }
+    .zero-numeral { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); font-size: clamp(320px, 42vw, 620px); font-weight: 200; line-height: 1; color: var(--text); opacity: .045; pointer-events: none; user-select: none; letter-spacing: -0.06em; }
+    .zero h2 { position: relative; margin: 20px auto 72px; max-width: 16ch; }
+    .stack-row { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--hair); border-radius: 8px; max-width: 980px; margin: 18px auto 0; background: rgba(11,12,14,.6); }
+    .stack-row span { padding: 22px 12px; font-family: var(--mono); font-size: 13px; color: var(--slate); }
+    .stack-row span + span { border-left: 1px solid var(--hair); }
+
+    /* 3. FEATURES */
+    .features { background: var(--canvas); padding: var(--section) 0; }
+    .sec-head { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: 64px; }
+    .sec-head h2 { margin-top: 18px; max-width: 14ch; }
+    .sec-head .lead { justify-self: end; }
+    .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(260px, auto); border: 1px solid var(--hair); border-radius: 8px; overflow: hidden; background: var(--hair); gap: 1px; }
+    .cell { background: var(--ti-1); color: inherit; text-decoration: none; transition: background .1s linear; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    a.cell:hover { background: var(--ti-2); }
+    .cell-head { display: flex; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--hair); }
+    .cell-head .mono:last-child { color: var(--amber); }
+    .cell-body { padding: 24px 20px 28px; margin-top: auto; }
+    .cell h3 { font-weight: 400; font-size: 22px; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 8px; }
+    .cell p { color: var(--slate); font-size: 15px; }
+    .cell-big { grid-column: span 2; grid-row: span 2; }
+    .cell-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .cell-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,24,32,.96) 8%, rgba(22,24,32,.2) 60%); }
+    .cell-photo > :not(img) { position: relative; z-index: 1; }
+    .cell-photo .cell-head { background: rgba(22,24,32,.75); }
+    .vu { display: flex; gap: 3px; margin-top: 20px; }
+    .vu i { flex: 1; height: 10px; background: #1F232D; border-radius: 1px; }
+    .vu i.on { background: var(--cyan); }
+    .vu i.pk { background: var(--amber); }
+    .snippet { font-family: var(--mono); font-size: 12px; line-height: 1.9; color: var(--slate); margin-top: 16px; }
+    .snippet b { color: var(--text); font-weight: 500; }
+
+    /* 4. CONSOLE */
+    .console { padding: var(--section) 0; background: radial-gradient(ellipse 70% 80% at 30% 50%, var(--ti-1), var(--carbon) 70%); }
+    .console-grid { display: grid; grid-template-columns: 2fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: center; }
+    .panels { position: relative; min-height: 680px; }
+    .panel { position: absolute; background: var(--ti-1); border: 1px solid var(--hair); border-radius: 8px; overflow: hidden; }
+    .panel .cell-head { background: var(--ti-2); }
+    .panel-body { padding: 20px; }
+    .p-audio { top: 0; left: 0; width: 62%; }
+    .p-chat { top: 120px; left: 14%; width: 66%; background: var(--ti-2); }
+    .p-tele { bottom: 0; right: 0; width: 52%; background: #1C1F29; border-color: var(--hair-hi); }
+    .msg { margin-bottom: 18px; }
+    .msg .mono { display: block; margin-bottom: 6px; }
+    .msg p { font-size: 16px; }
+    .msg.ai p { color: var(--text); }
+    .msg.me p { color: var(--slate); }
+    .tele-row { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; margin-bottom: 14px; font-family: var(--mono); font-size: 12px; color: var(--slate); }
+    .tele-row > span:not(.bar) { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar { height: 4px; background: var(--well); border-radius: 2px; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: var(--amber); }
+    .tele-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; margin-top: 4px; border-top: 1px solid var(--hair); }
+    .console-copy h2 { margin: 18px 0 20px; }
+    .console-copy .lead { margin-bottom: 36px; }
+    .console-copy .mono.hint { display: block; margin-top: 14px; }
+
+    /* 5. USE CASES */
+    .uses { padding: var(--section) 0; }
+    .uses h2 { margin: 18px 0 56px; }
+    .slices { display: flex; gap: 1px; height: clamp(460px, 52vw, 620px); border-radius: 8px; overflow: hidden; background: var(--hair); }
+    .slice { position: relative; flex: 1; min-width: 0; overflow: hidden; transition: flex-grow .7s cubic-bezier(.2,.7,.2,1); outline: none; }
+    .slice img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); transition: transform 1.2s ease; }
+    .slice::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,12,14,.95) 0%, rgba(11,12,14,.25) 55%, rgba(11,12,14,.45) 100%); }
+    .slice .v-label { position: absolute; z-index: 1; left: 50%; bottom: 32px; transform: translateX(-50%) rotate(180deg); writing-mode: vertical-rl; white-space: nowrap; color: var(--text); transition: opacity .3s; }
+    .slice .s-copy { position: absolute; z-index: 1; left: 32px; right: 32px; bottom: 32px; opacity: 0; transform: translateY(12px); transition: opacity .4s ease .15s, transform .4s ease .15s; }
+    .s-copy h3 { font-weight: 300; font-size: clamp(22px, 2.2vw, 32px); letter-spacing: -0.02em; line-height: 1.15; margin: 12px 0 20px; max-width: 22ch; }
+    .slices:not(:hover):not(:focus-within) .slice:first-child, .slice:hover, .slice:focus-within { flex-grow: 5; }
+    .slices:not(:hover):not(:focus-within) .slice:first-child .v-label, .slice:hover .v-label, .slice:focus-within .v-label { opacity: 0; }
+    .slices:not(:hover):not(:focus-within) .slice:first-child .s-copy, .slice:hover .s-copy, .slice:focus-within .s-copy { opacity: 1; transform: none; }
+    .slice:hover img { transform: scale(1.04); }
+
+    /* 6. FIELD NOTES */
+    .notes { padding: var(--section) 0; }
+    .notes-grid { display: grid; grid-template-columns: 56px 1.25fr 1fr; gap: clamp(32px, 5vw, 80px); }
+    .rail { border-right: 1px solid var(--hair); display: flex; justify-content: center; }
+    .rail .mono { writing-mode: vertical-rl; transform: rotate(180deg); padding-bottom: 8px; }
+    .pull blockquote { margin: 0 0 40px; font-weight: 300; font-size: clamp(30px, 3.4vw, 48px); line-height: 1.15; letter-spacing: -0.025em; }
+    .who { display: flex; align-items: center; gap: 20px; }
+    .who img { width: 88px; height: 88px; object-fit: cover; border-radius: 4px; filter: grayscale(1) sepia(.5) saturate(2.2) hue-rotate(-12deg) contrast(1.05) brightness(.85); }
+    .quotes { display: flex; flex-direction: column; gap: 24px; padding-top: clamp(40px, 10vw, 160px); }
+    .q { background: var(--ti-1); border: 1px solid var(--hair); border-radius: 8px; padding: 28px; margin: 0; }
+    .q p { font-size: 19px; line-height: 1.45; margin-bottom: 20px; }
+
+    /* 7. SETUP */
+    .setup { display: grid; grid-template-columns: 55fr 45fr; }
+    .setup > * { min-width: 0; }
+    .setup-l { background: var(--ti-1); padding: var(--section) var(--gutter); padding-left: max(var(--gutter), calc((100vw - 1360px) / 2 + var(--gutter))); }
+    .setup-r { padding: var(--section) var(--gutter); padding-right: max(var(--gutter), calc((100vw - 1360px) / 2 + var(--gutter))); display: flex; flex-direction: column; justify-content: flex-end; }
+    .setup-l h2 { margin: 18px 0 48px; max-width: 13ch; }
+    .term { background: var(--well); border: 1px solid #1F232D; border-radius: 8px; padding: 24px; font-family: var(--mono); font-size: 14px; line-height: 2; overflow-x: auto; }
+    .term div { white-space: nowrap; }
+    .term .p { color: var(--muted); user-select: none; }
+    .term .ok { color: var(--cyan); }
+    .price { background: var(--ti-2); border: 1px solid var(--hair); border-radius: 8px; overflow: hidden; }
+    .price-top { padding: 28px; }
+    .price-num { font-size: 96px; font-weight: 200; letter-spacing: -0.05em; line-height: 1; margin: 16px 0 8px; }
+    .specs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hair); }
+    .specs li { padding: 14px 28px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 13px; color: var(--slate); }
+    .price-cta { padding: 24px 28px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+    .setup-r img { margin-top: 24px; border-radius: 8px; height: 160px; width: 100%; object-fit: cover; border: 1px solid var(--hair); }
+
+    /* 8. FINAL CTA + FOOTER */
+    .final { position: relative; min-height: 82vh; display: flex; align-items: flex-end; justify-content: center; text-align: center; isolation: isolate; padding-bottom: clamp(64px, 9vw, 120px); }
+    .final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+    .final::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, var(--carbon) 0%, rgba(11,12,14,.72) 45%, rgba(11,12,14,.5) 100%); }
+    .final h2 { font-size: clamp(40px, 5.6vw, 80px); margin: 24px auto 40px; max-width: 18ch; }
+    .final .cta-row { justify-content: center; }
+    .final .mono.hint { display: block; margin-top: 18px; }
+    footer { border-top: 1px solid var(--hair); padding: 64px 0 48px; }
+    .foot { display: grid; grid-template-columns: 1.6fr repeat(2, 1fr) auto; gap: 40px; }
+    .foot .brand { font-weight: 500; font-size: 18px; letter-spacing: -0.02em; }
+    .foot p { color: var(--slate); font-size: 14px; margin-top: 12px; max-width: 30ch; }
+    .foot ul { list-style: none; margin: 16px 0 0; padding: 0; }
+    .foot li { margin-bottom: 10px; }
+    .foot li a { color: var(--slate); text-decoration: none; font-size: 14px; }
+    .foot li a:hover { color: var(--text); }
+
+    @media (max-width: 960px) {
+      .hero-body, .sec-head, .console-grid, .notes-grid, .setup { grid-template-columns: 1fr; }
+      .hero-caption { text-align: left; }
+      .sec-head .lead { justify-self: start; }
+      .bento { grid-template-columns: 1fr 1fr; }
+      .cell-big { grid-row: span 1; min-height: 420px; }
+      .stack-row { grid-template-columns: 1fr 1fr; }
+      .stack-row span + span { border-left: 0; }
+      .stack-row span { border-top: 1px solid var(--hair); }
+      .stack-row span:nth-child(-n+2) { border-top: 0; }
+      .stack-row span:nth-child(even) { border-left: 1px solid var(--hair); }
+      .stack-row span:last-child { grid-column: span 2; }
+      .panels { min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+      .panel { position: static; width: 100%; }
+      .slices { flex-direction: column; height: auto; }
+      .slice { flex: none; height: 96px; transition: height .6s cubic-bezier(.2,.7,.2,1); }
+      .slices:not(:hover):not(:focus-within) .slice:first-child, .slice:hover, .slice:focus-within { height: 380px; }
+      .slice .v-label { writing-mode: horizontal-tb; transform: none; left: 24px; bottom: 50%; translate: 0 50%; }
+      .slice .s-copy { left: 24px; right: 24px; bottom: 24px; }
+      .rail { display: none; }
+      .quotes { padding-top: 0; }
+      .setup-l, .setup-r { padding-left: var(--gutter); padding-right: var(--gutter); }
+      .foot { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .bento { grid-template-columns: 1fr; }
+      .cell-big { grid-column: span 1; }
+      .foot { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1 · HERO -->
+  <header class="hero">
+    <div class="hero-bg"><img src="/static/assets/site/hero-mic.jpg" alt="" fetchpriority="high" /></div>
+    <div class="hero-body wrap" id="top">
+      <div>
+        <span class="chip" data-tel="status"><span class="pip"></span>LOCAL · OFFLINE · v0.1</span>
+        <h1>Your voice never<br/>leaves the room.</h1>
+        <p class="lead">Speech-to-text, reasoning and voice, all running on your machine. No cloud, no account, no listening servers.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/#chat" target="_top">Open Terminal</a>
+          <a class="btn btn-ghost" href="/#voice" target="_top">Start a voice call</a>
+        </div>
+      </div>
+      <p class="mono hero-caption">Whisper → Qwen 2.5 → Piper<br/>Runs on Linux</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2 · ZERO -->
+    <section class="zero" aria-labelledby="zero-h">
+      <div class="zero-numeral" aria-hidden="true">0</div>
+      <div class="wrap reveal">
+        <p class="mono">Network requests per conversation</p>
+        <h2 id="zero-h">Zero. Not one byte to the cloud.</h2>
+        <p class="mono">Built on open, local components</p>
+        <div class="stack-row">
+          <span>faster-whisper</span><span>llama.cpp</span><span>Qwen 2.5 3B</span><span>Piper TTS</span><span>Linux / ALSA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · FEATURES -->
+    <section class="features" id="features" aria-labelledby="feat-h">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div>
+            <p class="mono">01 / Capabilities</p>
+            <h2 id="feat-h">Four instruments. One quiet machine.</h2>
+          </div>
+          <p class="lead">Every stage runs on your CPU. Nothing waits on a server.</p>
+        </div>
+        <div class="bento reveal">
+          <a class="cell cell-big cell-photo" href="/#voice" target="_top">
+            <img src="/static/assets/site/hero-mic.jpg" alt="" loading="lazy" />
+            <div class="cell-head"><span class="mono">Voice activity</span><span class="mono">Voice call →</span></div>
+            <div class="cell-body">
+              <h3>Speaks when you do.<br/>Stops when you stop.</h3>
+              <p>Voice detection ends your turn when you pause, then TouchCall answers.</p>
+              <div class="vu" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="pk"></i><i class="pk"></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+          </a>
+          <a class="cell" href="/#voice" target="_top">
+            <div class="cell-head"><span class="mono">Listen</span><span class="mono">POST /api/transcribe</span></div>
+            <div class="cell-body"><h3>Local transcription</h3><p>faster-whisper turns speech into text on-device.</p></div>
+          </a>
+          <a class="cell" href="/#chat" target="_top">
+            <div class="cell-head"><span class="mono">Think</span><span class="mono">POST /api/chat</span></div>
+            <div class="cell-body"><h3>On-device reasoning</h3><p>Qwen 2.5 3B through llama.cpp. No GPU required.</p></div>
+          </a>
+          <a class="cell cell-photo" href="/#voice" target="_top">
+            <img src="/static/assets/site/speaker.jpg" alt="" loading="lazy" />
+            <div class="cell-head"><span class="mono">Speak</span><span class="mono">POST /api/synthesize</span></div>
+            <div class="cell-body"><h3>Natural voice</h3><p>Piper neural text-to-speech, fully offline.</p></div>
+          </a>
+          <a class="cell" href="/#chat" target="_top">
+            <div class="cell-head"><span class="mono">Remember</span><span class="mono">Open Terminal →</span></div>
+            <div class="cell-body">
+              <h3>Multi-turn memory</h3>
+              <div class="snippet"><b>you</b> set a timer for pasta<br/><b>tc</b> ten minutes, started.<br/><b>you</b> make it twelve</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · CONSOLE (live backend status) -->
+    <section class="console" aria-labelledby="console-h">
+      <div class="wrap console-grid">
+        <div class="panels reveal">
+          <div class="panel p-audio" aria-hidden="true">
+            <div class="cell-head"><span class="mono">Audio input</span><span class="mono">mic://default · 16kHz</span></div>
+            <div class="panel-body"><div class="vu"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="pk"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          </div>
+          <div class="panel p-chat" aria-hidden="true">
+            <div class="cell-head"><span class="mono">Transcript</span><span class="mono"><span class="pip amber"></span>Live</span></div>
+            <div class="panel-body">
+              <div class="msg me"><span class="mono">You · 14:02</span><p>What's left on my list for today?</p></div>
+              <div class="msg ai"><span class="mono">TouchCall · 14:02</span><p>Two things: reply to Sam, and pick up the parcel before six.</p></div>
+            </div>
+          </div>
+          <div class="panel p-tele">
+            <div class="cell-head"><span class="mono">Backend</span><span class="mono">GET /api/telemetry</span></div>
+            <div class="panel-body">
+              <div class="tele-row">MODEL<span data-tel="model">Qwen 2.5 3B Instruct</span></div>
+              <div class="tele-row">BACKEND<span data-tel="backend">llama.cpp</span></div>
+              <div class="tele-row">WHISPER<span data-tel="whisper">—</span></div>
+              <div class="tele-row">PIPER<span data-tel="piper">—</span></div>
+              <div class="tele-row">CPU<span class="bar"><i data-tel="cpu" style="width:0%"></i></span></div>
+              <div class="tele-row">RAM<span data-tel="ram">—</span></div>
+              <div class="tele-foot"><span class="chip" data-tel="llama"><span class="pip"></span>llama-server :8088</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="console-copy reveal">
+          <p class="mono">02 / The console</p>
+          <h2 id="console-h">Watch it think, in real time.</h2>
+          <p class="lead">The Terminal shows every reply as it streams, with tokens per second and time to first token. Read any answer aloud with Piper.</p>
+          <a class="btn btn-ghost" href="/#chat" target="_top">Open Terminal</a>
+          <span class="mono hint" data-tel="hint">localhost:8080</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · USE CASES -->
+    <section class="uses" id="uses" aria-labelledby="uses-h">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="mono">03 / Where it lives</p>
+          <h2 id="uses-h">Hands busy. Data private.</h2>
+        </div>
+        <div class="slices reveal">
+          <div class="slice" tabindex="0">
+            <img src="/static/assets/site/kitchen.jpg" alt="Hands kneading dough on a dark kitchen counter" loading="lazy" />
+            <span class="mono v-label">Kitchen</span>
+            <div class="s-copy"><span class="mono">Kitchen</span><h3>Timers, conversions, recipes, without touching a screen.</h3></div>
+          </div>
+          <div class="slice" tabindex="0">
+            <img src="/static/assets/site/workshop.jpg" alt="Hands soldering a circuit board" loading="lazy" />
+            <span class="mono v-label">Workshop</span>
+            <div class="s-copy"><span class="mono">Workshop</span><h3>Pinouts and part values while both hands hold the iron.</h3></div>
+          </div>
+          <div class="slice" tabindex="0">
+            <img src="/static/assets/site/study.jpg" alt="Open book under a desk lamp at night" loading="lazy" />
+            <span class="mono v-label">Late night study</span>
+            <div class="s-copy"><span class="mono">Late night study</span><h3>Ask out loud at 2am. Nobody's logging it.</h3></div>
+          </div>
+          <div class="slice" tabindex="0">
+            <img src="/static/assets/site/armchair.jpg" alt="Person speaking from an armchair" loading="lazy" />
+            <span class="mono v-label">Accessibility</span>
+            <div class="s-copy"><span class="mono">Accessibility</span><h3>A voice interface that works without an internet connection.</h3></div>
+          </div>
+          <div class="slice" tabindex="0">
+            <img src="/static/assets/site/servers.jpg" alt="Server rack corridor" loading="lazy" />
+            <span class="mono v-label">Air-gapped labs</span>
+            <div class="s-copy"><span class="mono">Air-gapped labs</span><h3>Runs where the network is not allowed to.</h3></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · FIELD NOTES -->
+    <!-- placeholder: these quotes are design copy, replace with real user quotes before publishing -->
+    <section class="notes" aria-labelledby="notes-h">
+      <div class="wrap notes-grid">
+        <div class="rail"><span class="mono" id="notes-h">Field notes · users running TouchCall offline</span></div>
+        <figure class="pull reveal" style="margin:0">
+          <blockquote>“I unplugged the router to test it. It didn't even notice.”</blockquote>
+          <figcaption class="who">
+            <img src="/static/assets/site/portrait.jpg" alt="" loading="lazy" />
+            <span class="mono">Maya R. · Embedded engineer</span>
+          </figcaption>
+        </figure>
+        <div class="quotes reveal">
+          <figure class="q"><p>“A voice assistant I can use in a clinic without a compliance meeting.”</p><figcaption class="mono">Anand K. · Physiotherapist</figcaption></figure>
+          <figure class="q"><p>“Runs on my old ThinkPad. Replies before I've reached for my coffee.”</p><figcaption class="mono">Luca T. · Student</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · SETUP -->
+    <section class="setup" id="setup" aria-labelledby="setup-h">
+      <div class="setup-l">
+        <div class="reveal">
+          <p class="mono">04 / Setup</p>
+          <h2 id="setup-h">Free. Open source. A few commands.</h2>
+          <div class="term" role="group" aria-label="Install commands">
+            <div><span class="p">$ </span>git clone https://github.com/Pranavms09/OutVoice.git &amp;&amp; cd OutVoice</div>
+            <div><span class="p">$ </span>python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt</div>
+            <div><span class="p">$ </span>./launch_web.sh</div>
+            <div class="ok">● Web UI on http://127.0.0.1:8080. Say hello.</div>
+          </div>
+        </div>
+      </div>
+      <div class="setup-r">
+        <div class="price reveal">
+          <div class="price-top">
+            <p class="mono">Price</p>
+            <div class="price-num">$0</div>
+            <p style="color:var(--slate)">No account. No subscription.</p>
+          </div>
+          <ul class="specs">
+            <li>Linux · Python 3.10+</li>
+            <li>llama.cpp built locally</li>
+            <li>No GPU required</li>
+            <li>Browser mic for voice calls</li>
+          </ul>
+          <div class="price-cta">
+            <a class="btn btn-primary" href="/#chat" target="_top">Open TouchCall</a>
+            <a class="link" href="/#voice" target="_top">Voice call →</a>
+          </div>
+        </div>
+        <img src="/static/assets/site/keyboard.jpg" alt="" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- 8 · FINAL CTA -->
+    <section class="final" aria-labelledby="final-h">
+      <img src="/static/assets/site/night-desk.jpg" alt="" loading="lazy" />
+      <div class="wrap reveal">
+        <span class="chip"><span class="pip"></span>READY WHEN YOU ARE</span>
+        <h2 id="final-h">Talk to your computer. Only your computer.</h2>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/#voice" target="_top">Start a voice call</a>
+          <a class="btn btn-ghost" href="/#chat" target="_top">Open Terminal</a>
+        </div>
+        <span class="mono hint">Linux · local models · 0 accounts</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>
+        <span class="brand">TouchCall</span>
+        <p>A local voice assistant. Whisper → Qwen → Piper.</p>
+      </div>
+      <div><p class="mono">App</p><ul><li><a href="/#chat" target="_top">Terminal</a></li><li><a href="/#voice" target="_top">Voice call</a></li></ul></div>
+      <div><p class="mono">This page</p><ul><li><a href="#features">How it works</a></li><li><a href="#uses">Use cases</a></li><li><a href="#setup">Setup</a></li></ul></div>
+      <p class="mono">v0.1 · Built offline</p>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal; content stays visible if IntersectionObserver is missing.
+    const els = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }), { threshold: 0.12 });
+      els.forEach((el) => io.observe(el));
+    } else {
+      els.forEach((el) => el.classList.add('in'));
+    }
+
+    // Live backend status from the local TouchCall server (GET /api/telemetry).
+    const tel = (k) => document.querySelector(`[data-tel="${k}"]`);
+    const setChip = (el, on, text) => {
+      el.innerHTML = `<span class="pip" style="background:${on ? 'var(--cyan)' : 'var(--muted)'}"></span>${text}`;
+      el.style.color = on ? 'var(--cyan)' : 'var(--slate)';
+    };
+    async function pollTelemetry() {
+      try {
+        const res = await fetch('/api/telemetry', { cache: 'no-store' });
+        if (!res.ok) throw new Error(res.status);
+        const t = await res.json();
+        setChip(tel('status'), t.server_active, t.server_active ? 'LOCAL · LLM ONLINE · NO CLOUD' : 'LOCAL · LLM STARTING…');
+        setChip(tel('llama'), t.server_active, `llama-server :8088 · ${t.server_active ? 'online' : 'offline'}`);
+        tel('model').textContent = t.model;
+        tel('backend').textContent = t.backend;
+        tel('whisper').textContent = t.whisper_stt ? 'ready' : 'missing';
+        tel('piper').textContent = t.piper_tts ? 'ready' : 'missing';
+        tel('cpu').style.width = `${Math.min(100, Math.max(2, t.cpu_usage_pct))}%`;
+        tel('ram').textContent = `${t.memory_used_gb} / ${t.memory_total_gb} GB`;
+        tel('hint').textContent = 'Connected to this machine';
+      } catch {
+        setChip(tel('llama'), false, 'not running');
+        tel('hint').textContent = 'Start it with ./launch_web.sh';
+      }
+    }
+    pollTelemetry();
+    setInterval(pollTelemetry, 5000);
+  </script>
+</body>
+</html>
